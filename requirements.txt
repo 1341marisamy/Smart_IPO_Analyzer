@@ -1,0 +1,9 @@
+langgraph
+langchain
+langchain-openai
+pymongo
+tavily-python
+crawl4ai
+pypdf
+streamlit
+python-dotenv
