@@ -15,8 +15,8 @@ embeddings_model = OpenAIEmbeddings(model="text-embedding-3-large", dimensions=3
 mongo_uri = os.environ.get("MONGO_URI")
 try:
     mongo_client = MongoClient(mongo_uri)
-    db = mongo_client["ipo_db"]
-    collection = db["ipo_vectors"]
+    db = mongo_client["Smart_IPO"]
+    collection = db["embeddings"]
 except Exception as e:
     # Handle gracefully if no MongoDB URI is set or connection fails
     mongo_client = None
@@ -53,10 +53,10 @@ def search_ipo_pdf(query: str) -> str:
         pipeline = [
             {
                 "$vectorSearch": {
-                    "index": "default",
+                    "index": "vector_index",
                     "path": "embedding",
                     "queryVector": query_vector,
-                    "numCandidates": 50,
+                    "numCandidates": 300,
                     "limit": 5
                 }
             },
