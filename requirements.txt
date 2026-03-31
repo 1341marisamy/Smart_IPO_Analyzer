@@ -1,9 +1,10 @@
-langgraph
 langchain
+langchain-community
 langchain-openai
+langchain-text-splitters
+langgraph
 pymongo
-tavily-python
-crawl4ai
 pypdf
-streamlit
 python-dotenv
+tavily-python
+streamlit

@@ -1,9 +1,15 @@
-import streamlit as st
 import os
 import subprocess
+import sys
+
+import streamlit as st
 from langchain_core.messages import HumanMessage
+
 from src.graph import app as graph_app
 from src.state import AgentState
+
+PROJECT_ROOT = os.path.dirname(os.path.abspath(__file__))
+
 
 def main():
     st.set_page_config(page_title="Smart IPO Advisor", page_icon="📈", layout="wide")
@@ -21,7 +27,7 @@ def main():
         
         if uploaded_file is not None:
             # Create data dir if not exists
-            data_dir = os.path.join(os.path.dirname(__file__), "data")
+            data_dir = os.path.join(PROJECT_ROOT, "data")
             os.makedirs(data_dir, exist_ok=True)
             
             # Save file
@@ -37,9 +43,10 @@ def main():
                     try:
                         # Call ingestion as subprocess to keep UI clean and separate dependencies context if desired
                         result = subprocess.run(
-                            ["python", "ingestion.py"], 
-                            capture_output=True, 
-                            text=True
+                            [sys.executable, "ingestion.py"],
+                            capture_output=True,
+                            text=True,
+                            cwd=PROJECT_ROOT,
                         )
                         if result.returncode == 0:
                             st.success("Ingestion Complete!")
@@ -54,7 +61,10 @@ def main():
                         st.error(f"Execution Error: {str(e)}")
                         
         st.markdown("---")
-        st.info("Make sure you have correctly configured your `.env` file with `OPENAI_API_KEY`, `TAVILY_API_KEY`, and `MONGO_URI`.")
+        st.info(
+            "Make sure your `.env` file includes `OPENAI_API_KEY`, "
+            "`TAVILY_API_KEY`, and `MONGO_URI`."
+        )
                         
     # -----------------------------
     # Main Area: IPO Analysis Chat

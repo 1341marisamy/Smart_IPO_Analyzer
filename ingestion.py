@@ -4,9 +4,8 @@ from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from pymongo import MongoClient
-from dotenv import load_dotenv
 
-load_dotenv()
+from src.config import get_mongo_uri
 
 def ingest_pdfs():
     """
@@ -16,7 +15,7 @@ def ingest_pdfs():
     print("Starting ingestion process...")
     
     # Setup MongoDB
-    mongo_uri = os.environ.get("MONGO_URI")
+    mongo_uri = get_mongo_uri()
     if not mongo_uri or "your_mongo_uri" in mongo_uri:
         print("Error: MONGO_URI is not set correctly in your .env file.")
         return

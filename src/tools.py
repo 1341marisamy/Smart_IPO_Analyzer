@@ -1,18 +1,16 @@
 import os
-from typing import List, Dict, Any
 from langchain_core.tools import tool
 from langchain_openai import OpenAIEmbeddings
 from pymongo import MongoClient
 from tavily import TavilyClient
-from dotenv import load_dotenv
 
-load_dotenv()
+from src.config import get_mongo_uri
 
 # Initialize embeddings
 embeddings_model = OpenAIEmbeddings(model="text-embedding-3-large", dimensions=3072)
 
 # MongoDB setup
-mongo_uri = os.environ.get("MONGO_URI")
+mongo_uri = get_mongo_uri()
 try:
     mongo_client = MongoClient(mongo_uri)
     db = mongo_client["Smart_IPO"]
@@ -48,8 +46,9 @@ def search_ipo_pdf(query: str) -> str:
         # Embed the query
         query_vector = embeddings_model.embed_query(query)
         
-        # Define the Atlas Vector Search pipeline
-        # Note: You must have an Atlas Vector Search index named 'default' configured on 'ipo_vectors'.
+        # Define the Atlas Vector Search pipeline.
+        # Note: You must have an Atlas Vector Search index named
+        # 'vector_index' configured on Smart_IPO.embeddings.
         pipeline = [
             {
                 "$vectorSearch": {
